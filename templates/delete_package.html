@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% set pkg_credentials = current_user.username + "/" + pkg.pkg_name %}
+{% set pkg_url = "/pkg" + pkg.pkg_name %}
+
+{% block main %}
+  <!-- Heading -->
+  <h2 class="text-danger text-center my-4">Permanently delete <a href="{{ pkg_url }}" class="text-danger">{{ pkg_credentials }}</a></h2>
+
+  <!-- Description -->
+  <p class="text-center">
+    There is no way to restore deleted package.<br/>
+    If you sure you want to continue - type "<span class="text-danger text-monospace" id="correct-confirmation">delete {{ pkg_credentials }}</span>"
+  </p>
+
+  <div class="row d-flex justify-content-center">
+
+    <!-- Delete package confirmation form -->
+    <form action="{{ pkg_url }}/delete" method="POST" class="form col-12 col-md-8 col-lg-6 col-xl-4" id="delete-pkg-confirmation-form">
+
+      <!-- Confirmation -->
+      <input type="text" class="form-control text-danger text-monospace mb-3" id="confirmation-input" placeholder="delete {{ pkg_credentials }}" autocomplete="off">
+
+      <!-- Submit -->
+      <div class="d-flex justify-content-center">
+        <button class="btn btn-outline-danger" type="submit" disabled>I'm sure</button>
+      </div>
+
+    </form>
+
+  </div>
+
+{% endblock %}
+
+{% block js %}
+  <script type="text/javascript" src="{{ url_for('static', filename='js/delete_package_confirmation.js') }}"></script>
+{% endblock %}

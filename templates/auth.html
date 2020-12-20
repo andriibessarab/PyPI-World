@@ -1,0 +1,150 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+  Register/Log In
+
+{% endblock %}
+
+{% block main %}
+
+  <h2 class="text-center my-3" id="heading">Register</h2>
+
+  <div class="d-flex justify-content-center my-4">
+
+    <div class="btn-group" role="group" aria-label="Switch forms">
+      <button type="button" class="btn btn-info" id="registerFormShowButton">Register</button>
+      <button type="button" class="btn btn-info" id="loginFormShowButton">Log In</button>
+    </div>
+
+  </div>
+
+  <!-- Forms -->
+  <div class="row mt-4 justify-content-center">
+
+    <!-- Register -->
+    <div class="col-11 col-md-7 col-xl-4 my-4 my-xl-0" id="registerFormContainer">
+
+      <form id="register-form">
+
+        <!-- Full Name -->
+        <div class="form-group">
+
+          <label for="register-fullname-input">Full Name</label>
+          <input type="text" class="form-control" id="register-fullname-input" name="fullname" placeholder="Full Name" maxlength="1024" autocomplete="off" data-input data-required>
+
+          <div class="invalid-feedback" data-for="register-fullname-input">
+          </div>
+
+        </div>
+
+        <!-- Username -->
+        <div class="form-group">
+
+          <label for="register-username-input">Username</label>
+          <input type="text" class="form-control" id="register-username-input" name="username" placeholder="username" maxlength="15" autocomplete="off" data-input data-required>
+
+          <div class="invalid-feedback" data-for="register-username-input">
+          </div>
+
+        </div>
+
+        <!-- Email -->
+        <div class="form-group">
+
+          <label for="register-password-input">Email</label>
+          <input type="text" class="form-control" id="register-email-input" name="email" placeholder="someone@example.com" maxlength="254" autocomplete="off" data-input data-required>
+
+          <div class="invalid-feedback" data-for="register-email-input">
+          </div>
+
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+
+          <label for="register-password-input">Password</label>
+          <input type="password" class="form-control" id="register-password-input" name="password" placeholder="********" maxlength="256" autocomplete="off" data-input data-required>
+
+          <div class="invalid-feedback" data-for="register-password-input">
+          </div>
+
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-info" data-form="register-form" disabled>Register</button>
+
+      </form>
+
+    </div>
+
+    <!-- Log In -->
+    <div class="col-10 col-md-7 col-xl-4 my-4 my-xl-0 d-none" id="loginFormContainer">
+
+      <form id="login-form">
+
+        <!-- Username -->
+        <div class="form-group">
+
+          <label for="login-username-input">Username</label>
+          <input type="text" id="login-username-input" class="form-control" placeholder="username" name="username" maxlength="15" autocomplete="off" data-input data-required>
+
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+
+          <label for="login-password-input">Password</label>
+          <input type="password" id="login-password-input" class="form-control" placeholder="********" name="password" maxlength="15" maxlength="256" data-input data-required>
+
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-info" data-form="login-form" disabled>Log In</button>
+
+      </form>
+    </div>
+
+  </div>
+
+{% endblock %}
+
+{% block js %}
+
+  <script>
+    let registerForm = document.querySelector("form#register-form");
+    let loginForm = document.querySelector("#login-form");
+
+    SetFormEvents(registerForm, "/auth/register", true, "reload");
+    SetFormEvents(loginForm, "/auth/login", false, "redirect", "/");
+
+    let heading = document.querySelector("h2#heading")
+
+    let registerFormContainer = document.querySelector("div#registerFormContainer");
+    let loginFormContainer = document.querySelector("div#loginFormContainer");
+
+    let registerFormShowButton = document.querySelector("button#registerFormShowButton");
+    let loginFormShowButton = document.querySelector("button#loginFormShowButton");
+
+    registerFormShowButton.onclick = function() {
+      heading.innerHTML = "Register";
+
+      loginFormContainer.classList.remove("d-inline-block");
+      loginFormContainer.classList.add("d-none");
+
+      registerFormContainer.classList.remove("d-none");
+      registerFormContainer.classList.add("d-inline-block");
+    }
+
+    loginFormShowButton.onclick = function() {
+      heading.innerHTML = "Log In";
+
+      registerFormContainer.classList.remove("d-inline-block");
+      registerFormContainer.classList.add("d-none");
+
+      loginFormContainer.classList.remove("d-none");
+      loginFormContainer.classList.add("d-inline-block");
+    }
+  </script>
+
+{% endblock %}

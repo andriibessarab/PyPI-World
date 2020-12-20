@@ -1,0 +1,171 @@
+<!doctype html>
+
+<html lang="en">
+
+  <head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <!-- Favicon -->
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/ico" sizes="16x16">
+
+    <!-- Title -->
+    <title>PyPI World: {% block title %}{% endblock %}</title>
+
+    <style>
+
+    html {
+      font-size: 20px;
+    }
+
+    @media (max-width: 700px) {
+      html {
+        font-size: 18px;
+      }
+    }
+
+    </style>
+
+  </head>
+
+  <body class="bg-light">
+
+    <!-- Nav -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-warning">
+
+      <!-- Brand -->
+      <a class="navbar-brand" href="/">PyPI World</a>
+
+      <!-- Toggler -->
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- Navbar Content -->
+      <div class="collapse navbar-collapse" id="navbar">
+
+        <!-- List Of Navbar Items Left -->
+        <ul class="navbar-nav mr-auto">
+
+          <!-- Main -->
+          <li class="nav-item mx-3">
+            <a class="nav-link" href="/">
+              <i class="fas fa-home fa-lg"></i>
+              &nbsp;
+              <span class="d-inline-block d-lg-none">Main</span>
+            </a>
+          </li>
+
+          <!-- Links for authenticated users -->
+          {% if current_user.is_authenticated %}
+
+            <!-- My Packages -->
+            <li class="nav-item mx-3">
+              <a class="nav-link" href="/pkg">
+                <i class="far fa-folder-open fa-lg"></i>
+                &nbsp;
+                <span class="d-inline-block d-lg-none">My Packages</span>
+              </a>
+            </li>
+
+            <!-- New -->
+            <li class="nav-item mx-3">
+              <a class="nav-link" href="/start">
+                <i class="fas fa-plus fa-lg"></i>
+                  &nbsp;
+                <span class="d-inline-block d-lg-none">New</span>
+              </a>
+            </li>
+
+          {% endif %}
+
+        </ul>
+
+        <!-- List Of Navbar Items Right -->
+        <ul class="navbar-nav ml-auto">
+
+          <!-- Links for authenticated users -->
+          {% if current_user.is_authenticated %}
+
+            <!-- Account -->
+            <li class="nav-item mx-3">
+              <a class="nav-link" href="/account">
+                <i class="far fa-user-circle fa-lg"></i>
+                &nbsp;
+                <span class="">{{ current_user.username }}</span>
+              </a>
+            </li>
+
+            <!-- Log Out -->
+            <li class="nav-item mx-3">
+              <a class="nav-link" href="/auth/logout">
+                <i class="fas fa-sign-out-alt fa-lg"></i>
+                &nbsp;
+                <span class="d-inline-block d-lg-none">Log Out</span>
+              </a>
+            </li>
+
+          <!-- Links for unauthenticated users -->
+          {% else %}
+
+            <!-- Register/Log In -->
+            <li class="nav-item mx-3">
+              <a class="nav-link" href="/auth">
+                <i class="fas fa-sign-in-alt fa-lg"></i>
+                &nbsp;
+                <span class="d-inline-block d-lg-none">Register/Log In</span>
+              </a>
+            </li>
+
+          {% endif %}
+
+        </ul>
+
+      </div>
+
+    </nav>
+
+    <!-- Main -->
+    <main class="container-fluid">
+
+      <!-- Alert -->
+      <div class="alert d-none mt-3" id="alert" role="alert">
+        <strong></strong>
+        &nbsp;
+        <span></span>
+      </div>
+
+      {% block main %}
+
+      {% endblock %}
+
+    </main>
+
+    <input type="hidden" name="username" value="{{ current_user.username }}">
+    <input type="hidden" name="inputs_info" value="{{ inputs_info|to_json }}">
+    <input type="hidden" name="setup_args_info" value="{{ setup_args_info|to_json }}">
+
+    <!-- jQuery, Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+
+    <!-- Font Awesome JS -->
+    <script src="https://kit.fontawesome.com/0fba33e444.js" crossorigin="anonymous"></script>
+
+    <!-- Additional JS -->
+    <script type="text/javascript" src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+    {% block js %}
+    {% endblock %}
+
+  </body>
+
+</html>

@@ -1,0 +1,98 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+  Account
+
+{% endblock %}
+
+{% block main %}
+
+  <h2 class="my-3 text-center">u/<a href="/pkg" class="text-info">{{ current_user.username }}</a></h2>
+
+  <div class="row d-flex justify-content-center">
+
+    <form class="col-11 col-md-8 col-6 col-xl-4 ml-2" id="edit-account-form">
+
+      <!-- Full Name -->
+      <div class="form-group">
+
+        <label for="fullname-input">Fullname</label>
+
+        <input type="text" readonly class="form-control" id="fullname-input" value="{{ current_user.fullname }}">
+
+      </div>
+
+      <!-- Username -->
+      <div class="form-group">
+
+        <label for="fullname-input">Username</label>
+
+        <input type="text" readonly class="form-control" id="usename-input" value="{{ current_user.username }}">
+
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+
+        <label for="email-input">Email</label>
+
+        <input type="text" class="form-control" id="email-input" name="email" value="{{ current_user.email if current_user.email else "" }}" maxlenght="254" autocomplete="off" data-input data-required>
+
+      </div>
+
+      <!-- PyPI API Token -->
+      <div class="form-group">
+
+        <label for="pypi_token-input"">PyPI Token</label>
+
+        <input type="text" class="form-control" id="pypi_token-input" name="pypi_token" value="{{ current_user.pypi_token if current_user.pypi_token else "" }}" maxlenght="172" autocomplete="off" aria-describedby="pypi_tokenHelp" data-input data-required>
+
+        <small id="pypi_tokenHelp" class="form-text text-muted">
+          A PyPI API Token with "Entire Account(all projects)" scope
+          <a href="https://pypi.org/help/#apitoken" class="text-info" target="_blank"><i class="fas fa-question-circle"></i></a>
+        </small>
+
+      </div>
+
+      <!--GitHub Username -->
+      <div class="form-group">
+
+        <label for="pypi_token-input">GitHub Username</label>
+
+        <input type="text" class="form-control" id="github_token-input" name="github_username" value="{{ current_user.github_username if current_user.github_username else "" }}" maxlenght="39" autocomplete="off"data-input data-required>
+
+      </div>
+
+      <!--GitHub Token -->
+      <div class="form-group">
+
+        <label for="pypi_token-input">GitHub Token</label>
+
+        <input type="text" class="form-control" id="github_token-input" name="github_token" value="{{ current_user.github_token if current_user.github_token else "" }}" maxlenght="40" autocomplete="off" aria-describedby="github_tokenHelp" data-input data-required>
+
+        <small id="github_tokenHelp" class="form-text text-muted">
+          A GitHub Personal Access Token with "repo" scope
+          <a href="https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token" class="text-info" target="_blank"><i class="fas fa-question-circle"></i></a>
+        </small>
+
+      </div>
+
+      <!-- Submit -->
+      <button type="submit" class="btn btn-info mt-2" data-form="edit-account-form" disabled>Save Changes</button>
+
+    </form>
+
+  </div>
+
+{% endblock %}
+
+{% block js %}
+
+  <script>
+    let editAccountForm = document.querySelector("form#edit-account-form");
+
+    SetFormEvents(editAccountForm, "/account", false, "reload", null);
+  </script>
+
+{% endblock %}

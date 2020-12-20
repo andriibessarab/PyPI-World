@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+  User's packages
+
+{% endblock %}
+
+{% block main %}
+
+  <!-- Heading -->
+  <h2 class="text-center my-3">Your packages</h2>
+
+  {% if user_pkgs %}
+
+    <div class="row d-flex justify-content-center">
+
+      <!-- List of packages -->
+      <div class="list-group col-11 col-md-9 col-lg-8 col-xl-6">
+
+        {% for pkg in user_pkgs %}
+
+          {% set pkg_credentials = current_user.username + "/" + pkg.pkg_name %}
+          {% set pkg_path = "/pkg/" + pkg.pkg_name %}
+          {% set setup = user_setups[pkg.id] %}
+
+
+          <!-- List element -->
+          <li class="list-group-item d-flex justify-content-between">
+
+            <!-- Title & Link -->
+            <a href="{{ pkg_path }}" class="text-info">{{ pkg_credentials }}{% if pkg.is_published %}<br class="d-block d-sm-none" /><span class="font-weight-bold text-monospace">({{ setup.name }})</span>{% endif %}</a>
+
+            {% if pkg.is_published %}
+
+              <!-- View pkg on PyPI.org -->
+              <a href="https://pypi.org/project/{{ setup.name }}" target="_blank"><i class="fas fa-globe text-success"></i></a>
+
+            {% else %}
+
+              <!-- Delete button -->
+              <a href="{{ pkg_path }}/delete"><i class="far fa-trash-alt text-danger"></i></a>
+
+            {% endif %}
+
+          </li>
+
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+  {% else %}
+
+  <!-- Feedback -->
+  <p class="text-monospace">
+    Nothing here yet . . .<br/>
+    Get started by <a href="/start">creating your first project</a>
+  </p>
+
+  {% endif %}
+
+{% endblock %}

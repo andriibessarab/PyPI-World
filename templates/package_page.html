@@ -1,0 +1,226 @@
+{% extends "layout.html" %}
+
+{% set username = current_user.username %}
+{% set pkg_name = pkg.pkg_name %}
+{% set github_repo_name = pkg.github_repo_name if pkg.github_repo_name else "" %}
+
+{% set pkg_credentials = username + "/" + pkg_name %}
+{% set user_path = "/pkg" %}
+{% set pkg_path = user_path + "/" + pkg_name %}
+
+
+{% block title %}
+
+  {{ pkg_credentials }}
+
+{% endblock %}
+
+
+{% block main %}
+
+  <!-- Header -->
+  <h2 class="text-center my-3">
+    <a href="{{ user_path }}" class="text-info">{{ username }}</a>
+    /
+    <a href="{{ pkg_path }}" class="text-info">{{ pkg_name }}</a>
+  </h2>
+
+  <!-- Setup Open Button -->
+  <div class="d-flex justify-content-center my-2">
+
+    <button type="button" class="btn btn-link text-muted" id="setupOpenButton" {% if not github_repo_name %} disabled {% endif %}>
+
+      <i class="far fa-file-alt fa-2x"></i>
+      <br />
+      <small>setup.py</small>
+
+    </button>
+
+  </div>
+
+  <!-- GitHub -->
+  <div class="row d-flex justify-content-center my-2">
+
+    <div class="col-10 col-md-8 col-lg-6 col-xl-5 border {% if github_repo_name %} border-secondary {% else %} border-warning {% endif %} rounded py-4 px-4">
+
+        <!-- GitHub Header -->
+        <div class="d-flex justify-content-center">
+
+          <a class="text-dark" href="https://github.com" target="_blank"><i class="fab fa-github fa-3x"></i></a>
+
+        </div>
+
+        <form class="my-3" id="connectGitHubRepoForm">
+          <div class="input-group mb-3">
+            <div class="input-group-prepend">
+              <span class="input-group-text d-none d-lg-inline-block">https://github.com/{{ current_user.github_username }}/</span>
+              <span class="input-group-text d-inline-block d-lg-none">{{ current_user.github_username }}/</span>
+            </div>
+            <input type="text" class="form-control" name="github_repo_name" value="{{ github_repo_name }}" id="github-repo-url-input" placeholder="repo_name" autocomplete="off" maxlength="163" data-input data-required>
+          </div>
+          <div class="d-flex justify-content-center my-3">
+            <button type="submit" class="btn {% if github_repo_name %} btn-outline-info {% else %} btn-outline-warning {% endif %}" data-form="connectGitHubRepoForm" disabled>
+              Connect
+            </button>
+          </div>
+        </form>
+
+        <!-- GitHub Link -->
+        <div class="d-flex justify-content-center">
+
+          <a class="text-muted" href="https://github.com" target="_blank">github.com</a>
+
+        </div>
+
+    </div>
+
+  </div>
+
+  <!-- Buttons -->
+  <div class="row my-2 d-flex justify-content-center">
+
+    <div class="col-8 col-lg-3 col-xl-2 my-4">
+
+      <button type="button" id="publish-button" class="btn btn-lg btn-block my-2 {% if setup %} btn-outline-info" {% else %} btn-outline-secondary" disabled {% endif %}>
+        {% if pkg.is_published %} Update {% else %} Publish {% endif %}
+      </button>
+
+      {% if not pkg.is_published %}
+        <a role="button" class="btn btn-outline-danger btn-block my-2" href="{{ pkg_path }}/delete">Delete</a>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+  {% if pkg.is_published %}
+
+    <!-- PyPI Info -->
+    <div class="d-flex justify-content-center text-info text-monospace">
+
+      <a href="https://pypi.org/project/{{ setup.name }}" target="_blank" class="text-info text-monospace">View {{ setup.name }} on <span class="font-weight-bold">PyPI.org</span></a>
+
+    </div>
+
+    <div class="d-flex justify-content-center text-info text-monospace">
+
+      <small>Last updated on <span class="font-weight-bold">{{ pkg.updated_on }}</span></small>
+
+    </div>
+
+  {% endif %}
+
+  <!-- Setup Modal -->
+  <div class="modal" id="setupModal">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+      <div class="modal-content">
+
+        <!-- Header -->
+        <div class="modal-header">
+
+          <h5 class="modal-title">setup.py</h5>
+
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+
+        </div>
+
+        <!-- Body -->
+        <div class="modal-body">
+
+          <form id="setupForm">
+
+            {% for arg in setup_args_info %}
+
+              {% set arg_name = arg.name %}
+              {% set arg_value = setup[arg_name] if setup[arg_name] else "" %}
+
+              {% if arg.input_type == "text" %}
+
+                <div class="form-group d-flex justify-content-between">
+
+                  <label for="input-{{ arg_name }}" class="col-form-label col-6">
+                    {{ arg_name }}{% if arg.required %}
+                    <span class="text-danger">*</span>{% endif %}:
+                  </label>
+
+                  <input type="text" class="form-control col-5" id="input-{{ arg_name }}" name="setup_{{ arg_name }}" value="{{ arg_value }}" autocomplete="off" {% if arg_name == "name" and pkg.is_published %} disabled {% else %} data-input {% endif %} {% if arg.required %}data-required{% endif %}>
+
+                  <a tabindex="0" class="text-info" role="button" data-toggle="popover" data-trigger="focus" title="What is {{ arg_name }}?" data-content="{{ arg.desc }} {% if arg.ref %}<a href='{{ arg.ref }}' target='_blank' class='text-info'>Learn more</a>{% endif %}"><i class="fas fa-question-circle"></i></a>
+
+                </div>
+
+              {% elif arg.input_type == "select" %}
+
+                <div class="form-group d-flex justify-content-between">
+
+                  <label for="input-{{ arg_name }}" class="col-form-label col-6">
+                    {{ arg_name }}{% if arg.required %}
+                    <span class="text-danger">*</span>{% endif %}:
+                  </label>
+
+                  <select class="custom-select col-5" id="input-{{ arg_name }}" name="setup_{{ arg_name }}" autocomplete="off" {% if arg_name == "name" and pkg.is_published %} disabled {% else %} data-input {% endif %} {% if arg.required %}data-required{% endif %}>
+
+                    <option value="" {% if arg_value == "" %} selected {% endif %} disabled>--undefined--</option>
+
+                    {% for option in arg.select_values %}
+
+                      <option value="{{ option }}" {% if option == arg_value %}selected{% endif %}>{{ option }}</option>
+
+                    {% endfor %}
+
+                  </select>
+
+                  <a tabindex="0" class="text-info" role="button" data-toggle="popover" data-trigger="focus" title="What is {{ arg_name }}?" data-content="{{ arg.desc }} {% if arg.ref %}<a href='{{ arg.ref }}' target='_blank'>Learn more</a>{% endif %}"><i class="fas fa-question-circle"></i></a>
+
+                </div>
+
+              {% elif arg.input_type == "area" %}
+
+                <div class="form-group">
+
+                  <label for="input-{{ arg_name }}" class="col-form-label">
+                    {{ arg_name }}{% if arg.required %}
+                    <span class="text-danger">*</span>{% endif %}:
+                  </label>
+
+                  <a tabindex="0" class="text-info" role="button" data-toggle="popover" data-trigger="focus" title="What is {{ arg_name }}?" data-content="{{ arg.desc }} {% if arg.ref %}<a href='{{ arg.ref }}' target='_blank' class='text-info'>Learn more</a>{% endif %}"><i class="fas fa-question-circle"></i></a>
+
+                  <textarea class="form-control" id="input-{{ arg_name }}" name="setup_{{ arg_name }}" autocomplete="off" maxlength="1024" {% if arg_name == "name" and pkg.is_published %} disabled {% else %} data-input {% endif %} {% if arg.required %}data-required{% endif %}>{{ arg_value }}</textarea>
+                </div>
+
+              {% endif %}
+
+            {% endfor %}
+
+          </form>
+
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-outline-info" data-form="setupForm" disabled>Save</button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Hidden inputs -->
+  <input type="hidden" name="pkg_name" value="{{ pkg_name }}" />
+  <input type="hidden" name="setup_name" value="{{ setup.name }}" />
+
+{% endblock %}
+
+
+{% block js %}
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/pkg_page.js') }}"></script>
+
+{% endblock %}

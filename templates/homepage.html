@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+
+{% set username = current_user.username %}
+
+{% block title %}
+
+  {{ username }}' homepage
+
+{% endblock %}
+
+
+{% block main %}
+
+  <!-- Icon -->
+  <div class="d-flex justify-content-center my-3">
+
+    <i class="far fa-user-circle fa-5x text-info"></i>
+
+  </div>
+
+  <!-- Heading -->
+  <h2 class="text-center my-2">
+    u/<a href="/account" class="text-secondary">{{ username }}</a>
+  </h2>
+
+  <h6 class="text-center text-secondary my-2">{{ current_user.email }}</h6>
+
+  <div class="d-flex justify-content-center my-2">
+      <span class="text-secondary">Total packages: {{ user_pkgs|length }}</span>
+  </div>
+
+  <div class="row my-2 d-flex justify-content-center">
+
+    <div class="col-9 col-lg-4 col-xl-3 my-4">
+
+      <a role="button" class="btn btn-outline-info btn-block my-2" href="/start">Start New</a>
+      <a role="button" class="btn btn-outline-info btn-block my-2" href="/pkg">My Packages</a>
+      <a role="button" class="btn btn-outline-info btn-block my-2" href="/account">Edit Account</a>
+
+    </div>
+
+  </div>
+
+{% endblock %}

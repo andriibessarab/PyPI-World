@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+
+{% block title %}
+
+  Introduction
+
+{% endblock %}
+
+
+{% block main %}
+
+  <style>
+    #introduction-jumbotran * {
+      animation: appear 2s;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+  </style>
+
+  <div class="jumbotron mt-1 border border-rounded" id="introduction-jumbotran">
+
+    <h1 class="display-4">PyPI World</h1>
+    <p class="lead">A simplified way of putting your programs on <a href="https://pypi.org" target="_blank">PyPI.org</a> and PIP</p>
+
+    <hr class="my-4">
+
+    <h3 class="my-3">No Need to Worry About Low Level Details</h3>
+    <p class="my-3">LICENSE.txt, MANIFEST.in, setup.py, and other mandatory files will be generated automatically for you.</p>
+
+    <hr class="my-4">
+
+    <h3 class="my-3">Simplified Interface</h3>
+    <p class="my-3">No more black-and-white terminal output and errors, colourful and simplified feedback and tips.</p>
+
+    <hr class="my-4">
+
+    <h3 class="my-3"> <i class="fab fa-github fa-lg"></i> GitHub Based</h3>
+    <p class="my-3">Store code on your GitHub repository without the need to mix any distribution files together with your project. Your Repository will be cloned and all the work will be done for you on our server.</p>
+
+    <hr class="my-4">
+
+    <h3 class="my-3">You Code, We Distribute</h3>
+    <p class="my-3">Write your program, and we will distribute it to PyPI.org without you being involved in this complex process.</p>
+
+    <hr class="my-4">
+
+    <h3 class="my-3">Quick</h3>
+    <p class="my-3">The distribution will take you no longer than a couple of minutes altogether.</p>
+
+    <a class="btn btn-outline-info btn-lg" href="/auth" role="button">Give it a try</a>
+  </div>
+
+{% endblock %}

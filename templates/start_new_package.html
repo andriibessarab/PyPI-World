@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block title %}
+
+  New
+
+{% endblock %}
+
+{% block main %}
+
+  <!-- Heading -->
+  {% if current_user.pypi_token and current_user.github_token %}
+
+    <h2 class="my-3 text-center">Start new package</h2>
+
+    <div class="row d-flex justify-content-center">
+
+      <!-- Start new package form -->
+      <form class="form col-12 col-md-8 col-lg-6 col-xl-4" id="start-new-pkg-form">
+
+        <!-- Pkg's Name -->
+        <div class="mb-2" data-for="pkg_name">
+
+          <div class="input-group is-invalid">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text">{{ current_user.username }} /</span>
+            </div>
+
+            <input type="text" class="form-control" id="pkg-name-input" name="pkg_name" placeholder="pkg_name" maxlength="30" autocomplete="off" data-input data-required>
+
+          </div>
+
+          <div class="invalid-feedback" data-for="pkg-name-input">
+          </div>
+
+        </div>
+
+        <!-- Submit -->
+        <div class="d-flex justify-content-center">
+          <button type="submit" class="btn btn-info d-block" data-form="start-new-pkg-form" disabled>Start</button>
+        </div>
+
+      </form>
+
+    </div>
+
+  {% endif %}
+
+{% endblock %}
+
+{% block js %}
+
+  {% if current_user.pypi_token %}
+    <script>
+      let startNewPackageForm = document.querySelector("form#start-new-pkg-form");
+
+      SetFormEvents(startNewPackageForm, "/start", true, "redirect", `/pkg`);
+    </script>
+  {% else %}
+    <script>
+      showAlert("Oops!", "<a href=\"/account\">You must connect PyPI and GitHub accounts to create your first project</a>", "warning");
+    </script>
+  {% endif %}
+
+{% endblock %}
