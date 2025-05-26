@@ -1,4 +1,5 @@
 from flask import Flask
+from extensions import db
 
 
 def create_app(config_file="settings.py", jinja_globals="variables.py"):
@@ -24,3 +25,10 @@ def create_app(config_file="settings.py", jinja_globals="variables.py"):
     app.register_blueprint(pkg)
 
     return app
+
+app = create_app()
+
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+        app.run(debug=True)
